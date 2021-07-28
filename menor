@@ -1,0 +1,53 @@
+.data
+    vetor: .word 32,23,3,47,52,69,7,81,19,10   #alocacao do vetor diretamente na memoria
+    ler2: .asciiz"\nMenor elemento do Vetor: "
+    ler3: .asciiz"\nElementos do Vetor que foram inseridos direto na memoria:  "
+    pula_linha: .asciiz"  "
+
+.text
+la $t0,vetor            #carrega informacao p/memoria
+li $t1, 0    
+la $t8,vetor            #carrega informacao p/memoria
+li $t3,10
+lw $t6,0($t0)           #menor
+
+    
+    
+calculaMenor:           #modulo para calcular menor
+la $a0,ler3             #carrega informacao p/memoria
+li $v0,4                #imprime string
+syscall
+    
+    
+loop:                   #loop para percorrer o vetor
+beq $t1,$t3,saida       #se $T1 for igual a $t3 execute a partir de saida
+lw $t4,0($t0)
+move $a0, $t4           #passa o conte�do de um registrador para outro (n�o envolve mem�ria ram)
+li $v0,1      	        #imprime inteiro
+syscall
+la $a0,pula_linha       #carrega a quebra de linha 
+li $v0,4                #imprime string
+syscall
+lw $t7,0($t8)
+addi $t1,$t1,1
+addi $t0,$t0,4
+addi $t8,$t8,4
+blt $t7,$t6,guardaMenor  #se t7 for menor que que t6 execute guardaMenor
+j loop
+
+  
+guardaMenor:
+move $t6,$t7            #passa o conte�do de um registrador para outro 
+j loop
+    
+   
+saida:
+la $a0,ler2            #carrega informacao p/memoria
+li $v0,4               #imprime string
+syscall
+
+move $a0, $t6         #passa o conte�do de um registrador para outro 
+li $v0,1              #imprime inteito
+syscall
+li $v0 10             #ENCERRA 
+
